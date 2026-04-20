@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Penalty Rush</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="game-shell">
+      <section class="scorebar" aria-label="Match status">
+        <div>
+          <span class="label">Penalty Rush</span>
+          <strong id="teamText">Baku Falcons</strong>
+        </div>
+        <div>
+          <span class="label">Match</span>
+          <strong id="matchText">1 / 5</strong>
+        </div>
+        <div>
+          <span class="label">Points</span>
+          <strong id="pointsText">0</strong>
+        </div>
+      </section>
+
+      <section class="manager-bar" aria-label="Club setup">
+        <label>
+          <span class="label">Club</span>
+          <select id="teamSelect">
+            <option value="Baku Falcons">Baku Falcons</option>
+            <option value="Absheron United">Absheron United</option>
+            <option value="Caspian City">Caspian City</option>
+            <option value="Flame Stars">Flame Stars</option>
+          </select>
+        </label>
+        <label>
+          <span class="label">Difficulty</span>
+          <select id="difficultySelect">
+            <option value="rookie">Rookie</option>
+            <option value="pro" selected>Pro</option>
+            <option value="legend">Legend</option>
+          </select>
+        </label>
+        <button id="newSeasonButton" class="small-button" type="button">New Season</button>
+      </section>
+
+      <section class="stadium" aria-label="Football penalty game">
+        <canvas id="gameCanvas" width="960" height="640" aria-label="Penalty shootout pitch"></canvas>
+        <div class="toast" id="messageText">Aim at the goal, set power, then shoot.</div>
+      </section>
+
+      <section class="controls" aria-label="Game controls">
+        <button id="leftButton" class="icon-button" type="button" aria-label="Aim left" title="Aim left">&larr;</button>
+        <button id="shootButton" class="shoot-button" type="button">Shoot</button>
+        <button id="rightButton" class="icon-button" type="button" aria-label="Aim right" title="Aim right">&rarr;</button>
+        <button id="resetButton" class="icon-button" type="button" aria-label="Restart match" title="Restart match">&#8635;</button>
+      </section>
+
+      <section class="power-wrap" aria-label="Shot power">
+        <div class="power-label">
+          <span id="roundText">Shot 1 / 5</span>
+          <strong id="scoreText">0 - 0</strong>
+          <strong id="powerText">50%</strong>
+        </div>
+        <div class="power-track">
+          <div id="powerFill" class="power-fill"></div>
+        </div>
+      </section>
+
+      <section class="season-grid" aria-label="Season progress">
+        <div class="panel">
+          <div class="panel-head">
+            <span class="label">Upgrades</span>
+            <strong id="coinsText">0 coins</strong>
+          </div>
+          <div class="upgrade-grid">
+            <button id="accuracyButton" class="upgrade-button" type="button">Accuracy <span id="accuracyText">1</span></button>
+            <button id="powerButton" class="upgrade-button" type="button">Power <span id="powerStatText">1</span></button>
+            <button id="curveButton" class="upgrade-button" type="button">Curve <span id="curveText">1</span></button>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-head">
+            <span class="label">League</span>
+            <strong id="opponentText">vs North Rovers</strong>
+          </div>
+          <div id="leagueTable" class="league-table"></div>
+        </div>
+      </section>
+    </main>
+
+    <script src="game.js"></script>
+  </body>
+</html>
