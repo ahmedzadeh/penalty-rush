@@ -1,94 +1,87 @@
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Penalty Rush</title>
-    <link rel="stylesheet" href="styles.css">
-  </head>
-  <body>
-    <main class="game-shell">
-      <section class="scorebar" aria-label="Match status">
-        <div>
-          <span class="label">Penalty Rush</span>
-          <strong id="teamText">Baku Falcons</strong>
-        </div>
-        <div>
-          <span class="label">Match</span>
-          <strong id="matchText">1 / 5</strong>
-        </div>
-        <div>
-          <span class="label">Points</span>
-          <strong id="pointsText">0</strong>
-        </div>
-      </section>
-
-      <section class="manager-bar" aria-label="Club setup">
-        <label>
-          <span class="label">Club</span>
-          <select id="teamSelect">
-            <option value="Baku Falcons">Baku Falcons</option>
-            <option value="Absheron United">Absheron United</option>
-            <option value="Caspian City">Caspian City</option>
-            <option value="Flame Stars">Flame Stars</option>
-          </select>
-        </label>
-        <label>
-          <span class="label">Difficulty</span>
-          <select id="difficultySelect">
-            <option value="rookie">Rookie</option>
-            <option value="pro" selected>Pro</option>
-            <option value="legend">Legend</option>
-          </select>
-        </label>
-        <button id="newSeasonButton" class="small-button" type="button">New Season</button>
-      </section>
-
-      <section class="stadium" aria-label="Football penalty game">
-        <canvas id="gameCanvas" width="960" height="640" aria-label="Penalty shootout pitch"></canvas>
-        <div class="toast" id="messageText">Aim at the goal, set power, then shoot.</div>
-      </section>
-
-      <section class="controls" aria-label="Game controls">
-        <button id="leftButton" class="icon-button" type="button" aria-label="Aim left" title="Aim left">&larr;</button>
-        <button id="shootButton" class="shoot-button" type="button">Shoot</button>
-        <button id="rightButton" class="icon-button" type="button" aria-label="Aim right" title="Aim right">&rarr;</button>
-        <button id="resetButton" class="icon-button" type="button" aria-label="Restart match" title="Restart match">&#8635;</button>
-      </section>
-
-      <section class="power-wrap" aria-label="Shot power">
-        <div class="power-label">
-          <span id="roundText">Shot 1 / 5</span>
-          <strong id="scoreText">0 - 0</strong>
-          <strong id="powerText">50%</strong>
-        </div>
-        <div class="power-track">
-          <div id="powerFill" class="power-fill"></div>
-        </div>
-      </section>
-
-      <section class="season-grid" aria-label="Season progress">
-        <div class="panel">
-          <div class="panel-head">
-            <span class="label">Upgrades</span>
-            <strong id="coinsText">0 coins</strong>
-          </div>
-          <div class="upgrade-grid">
-            <button id="accuracyButton" class="upgrade-button" type="button">Accuracy <span id="accuracyText">1</span></button>
-            <button id="powerButton" class="upgrade-button" type="button">Power <span id="powerStatText">1</span></button>
-            <button id="curveButton" class="upgrade-button" type="button">Curve <span id="curveText">1</span></button>
-          </div>
-        </div>
-        <div class="panel">
-          <div class="panel-head">
-            <span class="label">League</span>
-            <strong id="opponentText">vs North Rovers</strong>
-          </div>
-          <div id="leagueTable" class="league-table"></div>
-        </div>
-      </section>
-    </main>
-
-    <script src="game.js"></script>
-  </body>
+<html lang='en'>
+<head>
+  <meta charset='utf-8'>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <title>Penalty Rush: Matchday</title>
+  <style>
+    :root{color-scheme:dark;--ink:#f7fbff;--muted:#b7c8c6;--panel:#101f24;--panel2:#1a3437;--accent:#ffd24a;--danger:#ff6b6b;--success:#65f0a4;font-family:Inter,system-ui,sans-serif}
+    *{box-sizing:border-box} body{min-height:100vh;margin:0;color:var(--ink);background:radial-gradient(circle at 15% 10%,rgba(255,210,74,.16),transparent 25rem),radial-gradient(circle at 82% 4%,rgba(112,214,255,.14),transparent 24rem),linear-gradient(135deg,#071316 0%,#102328 48%,#07181b 100%);display:grid;place-items:center;padding:16px}
+    .game-shell{width:min(1120px,100%);display:grid;gap:12px}.scorebar,.manager-bar,.controls,.panel{background:rgba(16,31,36,.94);border:1px solid rgba(238,250,240,.14);border-radius:8px;box-shadow:0 18px 45px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.04)}
+    .scorebar{min-height:76px;display:grid;grid-template-columns:1fr 170px 1fr;gap:8px;align-items:center;padding:12px}.scorebar div{min-width:0;display:grid;gap:3px;text-align:center}.label{color:var(--muted);font-size:.78rem;text-transform:uppercase;letter-spacing:0}.scorebar strong{font-size:clamp(1rem,2.5vw,1.8rem);white-space:nowrap}
+    .manager-bar{min-height:72px;display:grid;grid-template-columns:1fr 180px 150px;gap:10px;align-items:end;padding:10px}label{display:grid;gap:6px;min-width:0}select,button{min-height:44px;border-radius:8px;font:inherit;font-weight:900}select{width:100%;border:1px solid rgba(238,250,240,.16);padding:0 11px;color:var(--ink);background:linear-gradient(180deg,#10292d,#0b1d21)}button{border:0;color:#071316;cursor:pointer;transition:transform 120ms ease,filter 120ms ease}button:hover{filter:brightness(1.08)}button:active{transform:translateY(1px) scale(.99)}.small-button,.shoot-button{background:linear-gradient(180deg,#ffe77f,var(--accent) 58%,#f2b930)}
+    .stadium{position:relative;width:100%;aspect-ratio:48/31;min-height:370px;max-height:calc(100vh - 300px);overflow:hidden;border-radius:8px;border:1px solid rgba(238,250,240,.22);background:#126c3e;box-shadow:inset 0 0 0 1px rgba(255,255,255,.07),inset 0 -80px 130px rgba(0,0,0,.16),0 28px 70px rgba(0,0,0,.38)}canvas{width:100%;height:100%;display:block;touch-action:none}
+    .toast{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);width:min(720px,calc(100% - 28px));min-height:40px;display:grid;place-items:center;padding:9px 14px;color:var(--ink);background:rgba(4,15,17,.72);border:1px solid rgba(238,250,240,.16);border-radius:8px;text-align:center;line-height:1.25;font-weight:800;pointer-events:none}
+    .controls{min-height:72px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:10px}.action-button{color:var(--ink);background:linear-gradient(180deg,#254548,var(--panel2));border:1px solid rgba(238,250,240,.12)}.danger-button{background:linear-gradient(180deg,#ff9a9a,var(--danger))}
+    .status-grid{display:grid;grid-template-columns:minmax(240px,.8fr) minmax(320px,1.2fr);gap:12px}.panel{padding:12px;display:grid;gap:10px}.panel-head{display:flex;justify-content:space-between;align-items:center;gap:10px}.meter{height:16px;overflow:hidden;border-radius:999px;background:#08191d;border:1px solid rgba(238,250,240,.18)}#staminaFill{width:100%;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--success),var(--accent),var(--danger));transition:width 100ms linear}.microcopy{margin:0;color:var(--muted);line-height:1.35;font-weight:700}
+    @media(max-width:700px){body{padding:10px}.scorebar{grid-template-columns:1fr 112px 1fr;min-height:68px;padding:10px 6px}.manager-bar,.status-grid{grid-template-columns:1fr}.stadium{min-height:350px;max-height:none}.controls{grid-template-columns:repeat(2,1fr)}}
+  </style>
+</head>
+<body>
+  <main class='game-shell'>
+    <section class='scorebar'>
+      <div><span class='label'>Home</span><strong id='homeText'>Baku Falcons</strong></div>
+      <div><span class='label' id='clockText'>03:00</span><strong id='scoreText'>0 - 0</strong></div>
+      <div><span class='label'>Away</span><strong id='awayText'>North Rovers</strong></div>
+    </section>
+    <section class='manager-bar'>
+      <label><span class='label'>Your Club</span><select id='teamSelect'><option>Baku Falcons</option><option>Absheron United</option><option>Caspian City</option><option>Flame Stars</option></select></label>
+      <label><span class='label'>Difficulty</span><select id='difficultySelect'><option value='rookie'>Rookie</option><option value='pro' selected>Pro</option><option value='legend'>Legend</option></select></label>
+      <button id='restartButton' class='small-button'>Kick Off</button>
+    </section>
+    <section class='stadium'><canvas id='gameCanvas' width='960' height='620'></canvas><div class='toast' id='messageText'>Control the highlighted player. Pass, shoot, tackle, and move as a team.</div></section>
+    <section class='controls'><button id='passButton' class='action-button'>Pass</button><button id='throughButton' class='action-button'>Through</button><button id='shootButton' class='shoot-button'>Shoot</button><button id='tackleButton' class='danger-button'>Tackle</button></section>
+    <section class='status-grid'>
+      <div class='panel'><div class='panel-head'><span class='label'>Possession</span><strong id='possessionText'>Baku Falcons</strong></div><div class='meter'><div id='staminaFill'></div></div></div>
+      <div class='panel'><div class='panel-head'><span class='label'>Controls</span><strong id='hintText'>WASD / Arrows</strong></div><p class='microcopy'>Move the selected dot. On the ball: pass, through ball, shoot. Off the ball: tackle or press.</p></div>
+    </section>
+  </main>
+  <script>
+    const canvas=document.querySelector('#gameCanvas'),ctx=canvas.getContext('2d');
+    const homeText=document.querySelector('#homeText'),awayText=document.querySelector('#awayText'),clockText=document.querySelector('#clockText'),scoreText=document.querySelector('#scoreText'),possessionText=document.querySelector('#possessionText'),staminaFill=document.querySelector('#staminaFill'),hintText=document.querySelector('#hintText'),messageText=document.querySelector('#messageText'),teamSelect=document.querySelector('#teamSelect'),difficultySelect=document.querySelector('#difficultySelect'),restartButton=document.querySelector('#restartButton'),passButton=document.querySelector('#passButton'),throughButton=document.querySelector('#throughButton'),shootButton=document.querySelector('#shootButton'),tackleButton=document.querySelector('#tackleButton');
+    const W=canvas.width,H=canvas.height,pitch={x:64,y:54,w:832,h:512},goalH=118,matchLength=180;
+    const teams={'Baku Falcons':{primary:'#ef476f',secondary:'#ffd166'},'Absheron United':{primary:'#70d6ff',secondary:'#073b4c'},'Caspian City':{primary:'#06d6a0',secondary:'#118ab2'},'Flame Stars':{primary:'#ff7b00',secondary:'#fff3b0'}};
+    const difficultyMap={rookie:{ai:.76,shot:.72},pro:{ai:1,shot:1},legend:{ai:1.18,shot:1.12}};
+    let players=[],ball,score,selectedId,gameTime=matchLength,lastTime=0,keys={},pointerTarget=null,messageUntil=0,particles=[],shake=0,lastTouch=0;
+    const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
+    const dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
+    const norm=(x,y)=>{const l=Math.hypot(x,y)||1;return{x:x/l,y:y/l}};
+    const lerp=(a,b,t)=>a+(b-a)*t;
+    const teamName=s=>s==='home'?teamSelect.value:'North Rovers';
+    const kit=s=>s==='home'?teams[teamSelect.value]:{primary:'#70d6ff',secondary:'#111f2a'};
+    function msg(t,d=1600){messageText.textContent=t;messageUntil=performance.now()+d}
+    function makePlayer(id,side,role,x,y){return{id,side,role,x,y,vx:0,vy:0,homeX:x,homeY:y,radius:role==='GK'?14:12,speed:role==='MID'?150:role==='FWD'?162:138,stamina:1,cooldown:0,hasBall:false}}
+    function resetGame(){const hx=pitch.x+160,ax=pitch.x+pitch.w-160;players=[makePlayer(1,'home','GK',pitch.x+52,pitch.y+pitch.h/2),makePlayer(2,'home','DEF',hx,pitch.y+150),makePlayer(3,'home','DEF',hx,pitch.y+pitch.h-150),makePlayer(4,'home','MID',pitch.x+330,pitch.y+pitch.h/2),makePlayer(5,'home','FWD',pitch.x+470,pitch.y+pitch.h/2),makePlayer(6,'away','GK',pitch.x+pitch.w-52,pitch.y+pitch.h/2),makePlayer(7,'away','DEF',ax,pitch.y+150),makePlayer(8,'away','DEF',ax,pitch.y+pitch.h-150),makePlayer(9,'away','MID',pitch.x+pitch.w-330,pitch.y+pitch.h/2),makePlayer(10,'away','FWD',pitch.x+pitch.w-470,pitch.y+pitch.h/2)];ball={x:W/2,y:H/2,vx:0,vy:0,ownerId:5,lastSide:'home',spin:0};score={home:0,away:0};selectedId=5;gameTime=matchLength;lastTime=0;particles=[];shake=0;players.find(p=>p.id===5).hasBall=true;homeText.textContent=teamName('home');awayText.textContent=teamName('away');msg('Kick off. WASD/arrows move, J pass, K through ball, L shoot, I tackle.',3200);updateHud()}
+    const selected=()=>players.find(p=>p.id===selectedId);
+    const owner=()=>players.find(p=>p.id===ball.ownerId);
+    const nearest=(side,target=ball,exclude=null)=>players.filter(p=>p.side===side&&p.id!==exclude).sort((a,b)=>dist(a,target)-dist(b,target))[0];
+    function teammateAhead(p){const dir=p.side==='home'?1:-1;return players.filter(m=>m.side===p.side&&m.id!==p.id&&m.role!=='GK').map(m=>({m,score:(m.x-p.x)*dir-Math.abs(m.y-p.y)*.35})).sort((a,b)=>b.score-a.score)[0]?.m||nearest(p.side,ball,p.id)}
+    function inputVector(){let x=0,y=0;if(keys.ArrowLeft||keys.a)x--;if(keys.ArrowRight||keys.d)x++;if(keys.ArrowUp||keys.w)y--;if(keys.ArrowDown||keys.s)y++;if(pointerTarget){const p=selected(),dx=pointerTarget.x-p.x,dy=pointerTarget.y-p.y;if(Math.hypot(dx,dy)>8)return norm(dx,dy)}return norm(x,y)}
+    function release(p,tx,ty,speed){p.hasBall=false;ball.ownerId=null;ball.x=p.x;ball.y=p.y;const n=norm(tx-p.x,ty-p.y);ball.vx=n.x*speed;ball.vy=n.y*speed;ball.lastSide=p.side}
+    function claim(p){players.forEach(q=>q.hasBall=false);p.hasBall=true;ball.ownerId=p.id;ball.lastSide=p.side;if(p.side==='home')selectedId=p.id}
+    function pass(kind='normal'){const p=owner();if(!p||p.side!=='home')return;const m=kind==='through'?teammateAhead(p):nearest('home',{x:p.x+115,y:p.y},p.id);if(!m)return;release(p,m.x+(kind==='through'?78:18),m.y,kind==='through'?430:330);msg(kind==='through'?'Through ball into space.':'Pass played.',900)}
+    function shoot(){const p=owner();if(!p||p.side!=='home')return;release(p,pitch.x+pitch.w+16,pitch.y+pitch.h/2+(Math.random()-.5)*goalH*.72,p.x>pitch.x+pitch.w*.64?590:500);shake=2.5;msg('Shot!',900)}
+    function tackle(){const p=selected(),t=nearest('away',p);if(!t||dist(p,t)>42){msg('Get closer to tackle.',800);return}if(ball.ownerId===t.id||dist(t,ball)<26){claim(p);burst(ball.x,ball.y,'#ffd24a',16);msg('Clean tackle. Ball won.',1000)}else msg('Pressed the player.',700)}
+    function burst(x,y,color,count=12){for(let i=0;i<count;i++){const a=Math.random()*Math.PI*2,s=1.5+Math.random()*3;particles.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:550,color})}}
+    function aiTarget(p){const o=owner(),attacking=o?.side===p.side||(!o&&ball.lastSide===p.side),dir=p.side==='home'?1:-1,mirror=p.side==='home'?0:pitch.w;let x=p.homeX,y=p.homeY;if(attacking){x+=dir*(p.role==='FWD'?105:p.role==='MID'?68:28);if(o&&o.id!==p.id)y+=(o.y-y)*.22}else{const press=nearest(p.side,ball);if(press?.id===p.id){x=ball.x;y=ball.y}else{x=lerp(p.homeX,pitch.x+mirror*.35+ball.x*.35,.34);y=lerp(p.homeY,ball.y,.24)}}if(p.role==='GK'){x=p.side==='home'?pitch.x+42:pitch.x+pitch.w-42;y=clamp(ball.y,pitch.y+pitch.h/2-goalH/2,pitch.y+pitch.h/2+goalH/2)}return{x:clamp(x,pitch.x+20,pitch.x+pitch.w-20),y:clamp(y,pitch.y+20,pitch.y+pitch.h-20)}}
+    function aiActions(p,dt){const d=difficultyMap[difficultySelect.value];if(p.side==='home')return;if(ball.ownerId===p.id){const near=p.x<pitch.x+pitch.w*.36,press=nearest('home',p);if(near&&Math.random()<dt*1.7*d.shot){release(p,pitch.x-18,pitch.y+pitch.h/2+(Math.random()-.5)*goalH,520);msg('North Rovers shoot.',800)}else if(press&&dist(p,press)<58&&Math.random()<dt*2.2*d.ai){const m=teammateAhead(p);release(p,m.x-60,m.y,360)}}}
+    function updatePlayer(p,dt){let target;if(p.id===selectedId&&p.side==='home'){const v=inputVector();target={x:p.x+v.x*64,y:p.y+v.y*64};p.stamina=clamp(p.stamina+dt*(Math.hypot(v.x,v.y)>0?-.045:.05),.32,1)}else target=aiTarget(p);const dx=target.x-p.x,dy=target.y-p.y,n=norm(dx,dy),speed=p.speed*(.72+p.stamina*.28)*(p.side==='away'?difficultyMap[difficultySelect.value].ai:1),acc=clamp(Math.hypot(dx,dy)/40,0,1)*speed;p.vx=lerp(p.vx,n.x*acc,.14);p.vy=lerp(p.vy,n.y*acc,.14);p.x=clamp(p.x+p.vx*dt,pitch.x+14,pitch.x+pitch.w-14);p.y=clamp(p.y+p.vy*dt,pitch.y+14,pitch.y+pitch.h-14)}
+    function updateBall(dt){const o=owner();if(o){const dir=o.side==='home'?1:-1;ball.x=o.x+dir*15;ball.y=o.y+Math.sin(performance.now()/90)*2;ball.vx=o.vx;ball.vy=o.vy;return}ball.x+=ball.vx*dt;ball.y+=ball.vy*dt;ball.vx*=Math.pow(.985,dt*60);ball.vy*=Math.pow(.985,dt*60);ball.spin+=Math.hypot(ball.vx,ball.vy)*dt*.02;if(ball.y<pitch.y+12||ball.y>pitch.y+pitch.h-12){ball.y=clamp(ball.y,pitch.y+12,pitch.y+pitch.h-12);ball.vy*=-.58}const gt=pitch.y+pitch.h/2-goalH/2,gb=pitch.y+pitch.h/2+goalH/2;if(ball.x<pitch.x-12||ball.x>pitch.x+pitch.w+12){if(ball.y>gt&&ball.y<gb){if(ball.x<pitch.x)score.away++;else score.home++;burst(ball.x,ball.y,'#ffd24a',32);shake=5;msg(ball.x<pitch.x?'Goal for North Rovers.':'Goal for Baku Falcons!',2200);setTimeout(centerKickoff,900)}else{ball.x=clamp(ball.x,pitch.x+14,pitch.x+pitch.w-14);ball.vx*=-.45}}for(const p of players){const reach=p.role==='GK'?22:18;if(dist(p,ball)<reach&&Math.hypot(ball.vx,ball.vy)<520){const opp=ball.lastSide&&p.side!==ball.lastSide;if(Math.random()<(opp?.72:.92))claim(p)}}}
+    function centerKickoff(){players.forEach(p=>{p.x=p.homeX;p.y=p.homeY;p.vx=0;p.vy=0;p.hasBall=false});const starter=players.find(p=>p.side===(score.home<=score.away?'home':'away')&&p.role==='FWD');ball.x=W/2;ball.y=H/2;ball.vx=0;ball.vy=0;claim(starter)}
+    function updateHud(){homeText.textContent=teamName('home');awayText.textContent=teamName('away');scoreText.textContent=`${score.home} - ${score.away}`;const m=Math.floor(gameTime/60),s=Math.floor(gameTime%60);clockText.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;const o=owner();possessionText.textContent=o?teamName(o.side):'Loose ball';staminaFill.style.width=`${Math.round(selected().stamina*100)}%`;hintText.textContent=o?.side==='home'?'Attack':'Defend'}
+    function updateParticles(dt){shake=Math.max(0,shake-dt*14);particles.forEach(p=>{p.life-=dt*1000;p.x+=p.vx;p.y+=p.vy;p.vx*=.97;p.vy*=.97});particles=particles.filter(p=>p.life>0)}
+    function update(now){const dt=Math.min(.035,(now-lastTime)/1000||.016);lastTime=now;if(gameTime>0)gameTime=Math.max(0,gameTime-dt);if(gameTime===0)msg('Full time. Kick Off starts a new match.',100000);players.forEach(p=>updatePlayer(p,dt));updateBall(dt);players.forEach(p=>aiActions(p,dt));updateParticles(dt);if(now>messageUntil&&gameTime>0)messageText.textContent=owner()?.side==='home'?'Find space, play the right pass, then shoot.':'Close down the ball and time your tackle.';updateHud()}
+    function drawPitch(){const g=ctx.createLinearGradient(0,pitch.y,0,pitch.y+pitch.h);g.addColorStop(0,'#1b8d50');g.addColorStop(1,'#0b5b35');ctx.fillStyle=g;ctx.fillRect(pitch.x,pitch.y,pitch.w,pitch.h);for(let x=pitch.x;x<pitch.x+pitch.w;x+=pitch.w/8){ctx.fillStyle=Math.floor((x-pitch.x)/(pitch.w/8))%2?'rgba(255,255,255,.035)':'rgba(0,0,0,.035)';ctx.fillRect(x,pitch.y,pitch.w/8,pitch.h)}ctx.strokeStyle='rgba(238,250,240,.86)';ctx.lineWidth=4;ctx.strokeRect(pitch.x,pitch.y,pitch.w,pitch.h);ctx.beginPath();ctx.moveTo(pitch.x+pitch.w/2,pitch.y);ctx.lineTo(pitch.x+pitch.w/2,pitch.y+pitch.h);ctx.stroke();ctx.beginPath();ctx.arc(pitch.x+pitch.w/2,pitch.y+pitch.h/2,72,0,Math.PI*2);ctx.stroke();ctx.strokeRect(pitch.x,pitch.y+pitch.h/2-112,132,224);ctx.strokeRect(pitch.x+pitch.w-132,pitch.y+pitch.h/2-112,132,224);ctx.strokeRect(pitch.x-18,pitch.y+pitch.h/2-goalH/2,18,goalH);ctx.strokeRect(pitch.x+pitch.w,pitch.y+pitch.h/2-goalH/2,18,goalH)}
+    function drawPlayers(){const sel=selected();for(const p of players){const k=kit(p.side);ctx.fillStyle='rgba(0,0,0,.28)';ctx.beginPath();ctx.ellipse(p.x,p.y+p.radius+4,p.radius*1.25,5,0,0,Math.PI*2);ctx.fill();if(p.id===sel.id){ctx.strokeStyle='#ffd24a';ctx.lineWidth=4;ctx.beginPath();ctx.arc(p.x,p.y,p.radius+9,0,Math.PI*2);ctx.stroke()}ctx.fillStyle=k.primary;ctx.beginPath();ctx.arc(p.x,p.y,p.radius,0,Math.PI*2);ctx.fill();ctx.fillStyle=k.secondary;ctx.beginPath();ctx.arc(p.x-4,p.y-4,p.radius*.34,0,Math.PI*2);ctx.fill();ctx.fillStyle='#071316';ctx.font='900 10px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(p.role[0],p.x,p.y+1)}}
+    function drawBall(){ctx.fillStyle='rgba(0,0,0,.28)';ctx.beginPath();ctx.ellipse(ball.x,ball.y+8,10,4,0,0,Math.PI*2);ctx.fill();ctx.save();ctx.translate(ball.x,ball.y);ctx.rotate(ball.spin);ctx.fillStyle='#fbfbf5';ctx.beginPath();ctx.arc(0,0,8,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#152227';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(-5,-2);ctx.lineTo(0,4);ctx.lineTo(5,-2);ctx.moveTo(0,-6);ctx.lineTo(0,4);ctx.stroke();ctx.restore()}
+    function drawParticles(){for(const p of particles){ctx.globalAlpha=clamp(p.life/550,0,1);ctx.fillStyle=p.color;ctx.beginPath();ctx.arc(p.x,p.y,3,0,Math.PI*2);ctx.fill()}ctx.globalAlpha=1}
+    function draw(){ctx.clearRect(0,0,W,H);ctx.save();if(shake>0)ctx.translate((Math.random()-.5)*shake,(Math.random()-.5)*shake);drawPitch();drawPlayers();drawBall();drawParticles();ctx.restore()}
+    function loop(now){update(now);draw();requestAnimationFrame(loop)}
+    function canvasPoint(e){const r=canvas.getBoundingClientRect();return{x:(e.clientX-r.left)/r.width*W,y:(e.clientY-r.top)/r.height*H}}
+    canvas.addEventListener('pointerdown',e=>{pointerTarget=canvasPoint(e);lastTouch=performance.now()});canvas.addEventListener('pointermove',e=>{if(e.buttons)pointerTarget=canvasPoint(e)});window.addEventListener('pointerup',()=>setTimeout(()=>{if(performance.now()-lastTouch>180)pointerTarget=null},180));
+    window.addEventListener('keydown',e=>{keys[e.key]=true;keys[e.key.toLowerCase()]=true;if(e.key.toLowerCase()==='j')pass();if(e.key.toLowerCase()==='k')pass('through');if(e.key.toLowerCase()==='l')shoot();if(e.key.toLowerCase()==='i')tackle()});window.addEventListener('keyup',e=>{keys[e.key]=false;keys[e.key.toLowerCase()]=false});
+    passButton.addEventListener('click',()=>pass());throughButton.addEventListener('click',()=>pass('through'));shootButton.addEventListener('click',shoot);tackleButton.addEventListener('click',tackle);restartButton.addEventListener('click',resetGame);teamSelect.addEventListener('change',resetGame);difficultySelect.addEventListener('change',resetGame);
+    resetGame();requestAnimationFrame(loop);
+  </script>
+</body>
 </html>
