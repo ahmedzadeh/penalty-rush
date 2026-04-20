@@ -1,23 +1,24 @@
-# Penalty Rush
+# Penalty Rush: Matchday
 
-A fast browser football game about penalty shootouts, upgrades, and a short league season.
+A browser football game with a top-down match view, dot players, real-time possession, passing, shooting, through balls, and tackling.
 
 ## Play
 
-Open `index.html` in a browser.
+Open `index.html` in a browser, or use GitHub Pages.
 
 ## Features
 
-- Five-match league season
-- Team and difficulty selection
-- Timed power meter
-- Aim with mouse, touch, or arrow keys
-- Goalkeeper saves and opponent penalties
-- Coins for goals
-- Accuracy, Power, and Curve upgrades
+- Top-down 5v5 football match
+- User-controlled highlighted player
+- AI teammates and opponents
+- Ball physics, passing lanes, through balls, shots, tackles
+- Match clock, score, stamina, possession status
+- Keyboard and touch/click movement
 
 ## Controls
 
-- Arrow keys: aim
-- Space or Enter: shoot
-- R: restart match
+- WASD or Arrow keys: move
+- J: pass
+- K: through ball
+- L: shoot
+- I: tackle
