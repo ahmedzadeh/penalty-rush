@@ -1,6 +1,6 @@
 # Penalty Rush: Matchday
 
-A browser football game with a top-down match view, dot players, real-time possession, passing, shooting, through balls, and tackling.
+A browser football game with a top-down match view, dot players, keyboard control, stronger opponent pressure, goalkeeper saves, passing, shooting, through balls, sprinting, and tackling.
 
 ## Play
 
@@ -11,14 +11,15 @@ Open `index.html` in a browser, or use GitHub Pages.
 - Top-down 5v5 football match
 - User-controlled highlighted player
 - AI teammates and opponents
+- Bigger goals with goalkeeper save reach
 - Ball physics, passing lanes, through balls, shots, tackles
-- Match clock, score, stamina, possession status
+- Match clock, score, stamina, active AI pressure
 - Keyboard and touch/click movement
 
 ## Controls
 
-- WASD or Arrow keys: move
-- J: pass
-- K: through ball
-- L: shoot
-- I: tackle
+- Arrow keys: move
+- Shift: sprint
+- P: pass
+- Space: shoot
+- T: tackle
